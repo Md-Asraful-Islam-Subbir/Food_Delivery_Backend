@@ -10,9 +10,8 @@ const addFood = async (req, res) => {
       price: req.body.price,
       category: req.body.category,
       image: req.file.filename,
-      inStock: req.body.inStock ?? true, // Default to true if not provided
+      inStock: req.body.inStock ?? true, // Default to true
     });
-
     await food.save();
     res.json({ success: true, message: "Food added successfully" });
   } catch (error) {
@@ -53,7 +52,7 @@ const toggleStock = async (req, res) => {
     const food = await foodModel.findById(req.body.id);
     if (!food) return res.status(404).json({ success: false, message: "Food not found" });
 
-    food.inStock = !food.inStock; // Toggle stock status
+    food.inStock = !food.inStock;
     await food.save();
 
     res.json({ success: true, message: "Stock status updated successfully", data: food });
