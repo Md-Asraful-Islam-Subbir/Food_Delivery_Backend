@@ -100,4 +100,36 @@ try {
     res.json({success:false,message:"Error"});
 }
 }
-export {placeOrder,verifyOrder,userOrders,listOrders,updateStatus}
+const getUserData = async (req, res) => {
+    const userId = req.body.userId; // Extract the userId set by authMiddleware
+    console.log("Fetching user data for ID:", userId);
+
+    try {
+        // Use the userModel to fetch user data by _id
+        const user = await userModel.findById(userId); // Assuming userId is MongoDB ObjectId
+
+        // Handle case where the user is not found
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+
+        // Send success response with user data
+        res.json({
+            success: true,
+            message: "User data retrieved successfully",
+            data: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                cartData: user.cartData
+            }
+        });
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+
+        // Send error response
+        res.json({ success: false, message: "Error fetching user data" });
+    }
+};
+
+export {placeOrder,verifyOrder,userOrders,listOrders,updateStatus,getUserData}
